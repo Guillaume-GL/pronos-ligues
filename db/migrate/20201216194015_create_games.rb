@@ -4,7 +4,7 @@ class CreateGames < ActiveRecord::Migration[6.0]
       t.integer :goal_team_home_real
       t.integer :goal_team_away_real
       t.string :match_group_name_and_day
-      t.reference :competition
+      t.references :competition
 
       t.timestamps
     end
