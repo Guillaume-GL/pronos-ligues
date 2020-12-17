@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_12_16_194015) do
+ActiveRecord::Schema.define(version: 2020_12_17_092815) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -29,7 +29,11 @@ ActiveRecord::Schema.define(version: 2020_12_16_194015) do
     t.bigint "competition_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.bigint "team_away_id"
+    t.bigint "team_home_id"
     t.index ["competition_id"], name: "index_games_on_competition_id"
+    t.index ["team_away_id"], name: "index_games_on_team_away_id"
+    t.index ["team_home_id"], name: "index_games_on_team_home_id"
   end
 
   create_table "leagues", force: :cascade do |t|
@@ -38,6 +42,8 @@ ActiveRecord::Schema.define(version: 2020_12_16_194015) do
     t.text "gain"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.bigint "pronostic_id", null: false
+    t.index ["pronostic_id"], name: "index_leagues_on_pronostic_id"
     t.index ["user_id"], name: "index_leagues_on_user_id"
   end
 
@@ -46,6 +52,8 @@ ActiveRecord::Schema.define(version: 2020_12_16_194015) do
     t.integer "goal_team_away_prono"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.bigint "game_id", null: false
+    t.index ["game_id"], name: "index_pronostics_on_game_id"
   end
 
   create_table "teams", force: :cascade do |t|
@@ -54,11 +62,16 @@ ActiveRecord::Schema.define(version: 2020_12_16_194015) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "usernames", force: :cascade do |t|
+  create_table "users", force: :cascade do |t|
+    t.string "username"
     t.string "email"
     t.string "password"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  add_foreign_key "games", "teams", column: "team_away_id"
+  add_foreign_key "games", "teams", column: "team_home_id"
+  add_foreign_key "leagues", "pronostics"
+  add_foreign_key "pronostics", "games"
 end
